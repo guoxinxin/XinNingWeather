@@ -1,4 +1,6 @@
-package com.xinning.xinningweather.model;
+package com.xinning.xinningweather.db;
+
+import org.litepal.crud.DataSupport;
 
 /**
  * @author guoxi at 2017-08-15
@@ -6,10 +8,10 @@ package com.xinning.xinningweather.model;
  *
  */
 
-public class Province {
+public class Province  extends DataSupport {
     private int id;//id
     private String provinceName;//城市名
-    private String provinceCode;//城市代码
+    private int provinceCode;//城市代码
 
     public int getId() {
         return id;
@@ -27,11 +29,11 @@ public class Province {
         this.provinceName = provinceName;
     }
 
-    public String getProvinceCode() {
+    public int getProvinceCode() {
         return provinceCode;
     }
 
-    public void setProvinceCode(String provinceCode) {
+    public void setProvinceCode(int provinceCode) {
         this.provinceCode = provinceCode;
     }
 }
