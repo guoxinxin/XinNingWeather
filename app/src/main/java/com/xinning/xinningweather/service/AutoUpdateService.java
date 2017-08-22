@@ -23,6 +23,7 @@ import okhttp3.Response;
 
 /**
  * @author guoxi at 2017-08-21
+ * 自动更新服务
  */
 
 public class AutoUpdateService  extends Service{
