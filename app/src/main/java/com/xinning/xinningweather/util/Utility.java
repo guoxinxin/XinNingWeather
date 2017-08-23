@@ -23,12 +23,12 @@ public class Utility {
      * @return
      */
     public static boolean handleProvince(String response){
-        if(!TextUtils.isEmpty(response)){
+        if (!TextUtils.isEmpty(response)) {
             try {
-                JSONArray allProvinces=new JSONArray(response);
-                for (int i = 0; i <allProvinces.length() ; i++) {
-                  JSONObject provinceObject=  allProvinces.getJSONObject(i);
-                    Province province=new Province();
+                JSONArray allProvinces = new JSONArray(response);
+                for (int i = 0; i < allProvinces.length(); i++) {
+                    JSONObject provinceObject = allProvinces.getJSONObject(i);
+                    Province province = new Province();
                     province.setProvinceName(provinceObject.getString("name"));
                     province.setProvinceCode(provinceObject.getInt("id"));
                     province.save();
@@ -38,6 +38,7 @@ public class Utility {
                 e.printStackTrace();
             }
         }
+        LogUtil.e("获取失败"+response);
         return false;
     }
 
@@ -54,7 +55,7 @@ public class Utility {
                     JSONObject cityObject=allCities.getJSONObject(i);
                     City city=new City();
                     city.setCityName(cityObject.getString("name"));
-                    city.setCityCode(cityObject.getString("id"));
+                    city.setCityCode(cityObject.getInt("id"));
                     city.setProvinceId(proVinceId);
                     city.save();
                 }

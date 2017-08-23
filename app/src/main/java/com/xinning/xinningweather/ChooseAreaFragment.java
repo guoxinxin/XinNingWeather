@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.xinning.xinningweather.db.City;
 import com.xinning.xinningweather.db.County;
 import com.xinning.xinningweather.db.Province;
 import com.xinning.xinningweather.util.HttpUtil;
+import com.xinning.xinningweather.util.LogUtil;
 import com.xinning.xinningweather.util.ToastUtil;
 import com.xinning.xinningweather.util.Utility;
 
@@ -138,8 +140,8 @@ public class ChooseAreaFragment extends Fragment {
             currentLevel=LEVEL_PROVINCE;
         }
         else{
-            String address="http://guolin.tech/api/china";
-            queryFromServer(address,"province");
+            String address = "http://guolin.tech/api/china";
+            queryFromServer(address, "province");
         }
 
     }
@@ -150,7 +152,7 @@ public class ChooseAreaFragment extends Fragment {
          private void queryCities(){
              titleText.setText(selectedProvince.getProvinceName());
              backButton.setVisibility(View.VISIBLE);
-             cityList= DataSupport.where("province=?",String.valueOf(selectedProvince.getId())).find(City.class);
+             cityList= DataSupport.where("provinceid=?",String.valueOf(selectedProvince.getId())).find(City.class);
              if(cityList.size()>0){
                 dataList.clear();
                  for (City city:cityList) {
@@ -161,7 +163,7 @@ public class ChooseAreaFragment extends Fragment {
                  currentLevel=LEVEL_CITY;
              }else{
                   int provinceCode=selectedProvince.getProvinceCode();
-                 String address="http://guolin.tech/api/china"+provinceCode;
+                 String address="http://guolin.tech/api/china/"+provinceCode;
                  queryFromServer(address,"city");
              }
          }
@@ -182,7 +184,7 @@ public class ChooseAreaFragment extends Fragment {
              }else{
                int provinceCode=  selectedProvince.getProvinceCode();
               int  cityCode=   selectedCity.getCityCode();
-                 String address="http://guolin.tech/api/china"+provinceCode+"/"+cityCode;
+                 String address="http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
                  queryFromServer(address,"county");
              }
          }
@@ -209,7 +211,9 @@ public class ChooseAreaFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                  String responseText= response.body().toString();
+                String responseText= response.body().string();//当时就是在这里出问题了，注意string()和toString()区别
+                Log.e("123",responseText);
+                LogUtil.e(responseText);
                 boolean result=false;
                 if("province".equals(type)){
                     result= Utility.handleProvince(responseText);

@@ -7,7 +7,7 @@
     <list>
         <mapping class="com.xinning.xinningweather.db.Province"/>
         <mapping class="com.xinning.xinningweather.db.City"/>
-        <mapping class="com.xinning.xinningweather.db.Country"/>
+        <mapping class="com.xinning.xinningweather.db.County"/>
     </list>
 
 </litepal>
