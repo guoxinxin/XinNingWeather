@@ -7,10 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.xinning.xinningweather.gson.Forecast;
 import com.xinning.xinningweather.gson.Weather;
 import com.xinning.xinningweather.util.HttpUtil;
@@ -43,6 +45,7 @@ public class WeatherActivity  extends AppCompatActivity{
     private TextView comfortText;
     private TextView carWashText;
     private TextView sportText;
+    private ImageView bingPicImg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class WeatherActivity  extends AppCompatActivity{
         comfortText= (TextView) findViewById(R.id.comfort_text);
         carWashText= (TextView) findViewById(R.id.car_wash_text);
         sportText= (TextView) findViewById(R.id.sport_text);
+        bingPicImg= (ImageView) findViewById(R.id.bing_pic_img);
         SharedPreferences prefs= getDefaultSharedPreferences(this);
         String weatherString =prefs.getString("weather",null);
         if(weatherString!=null){
@@ -72,6 +76,41 @@ public class WeatherActivity  extends AppCompatActivity{
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeathera(weatherId);
         }
+        String bingPic=prefs.getString("bing_pic",null);
+        if(bingPic!=null){
+            Glide.with(this).load(bingPic).into(bingPicImg);
+        }else{
+            loadBingPic();
+        }
+    }
+
+    /**
+     * 加载网络图片
+     */
+    private void loadBingPic() {
+        String url="http://guolin.tech/api/bing_pic";
+        HttpUtil.sendOkHttpRequest(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                ToastUtil.show(getBaseContext(),"请求失败");
+                return;
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                 final String bingPic= response.body().string();
+                //将获取的数据进行保存到SP
+                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                edit.putString("bing_pic",bingPic);
+                edit.apply();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -111,7 +150,7 @@ public class WeatherActivity  extends AppCompatActivity{
                 });
             }
         });
-
+         loadBingPic();
     }
 
     /**
