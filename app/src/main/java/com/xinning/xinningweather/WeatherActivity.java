@@ -105,7 +105,8 @@ public class WeatherActivity  extends AppCompatActivity{
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestWeathera(weatherId);
+                LogUtil.e(weatherId);
+                requestWeathera(weatherId);//为啥刷新的时候有问题
             }
         });
         navButton.setOnClickListener(new View.OnClickListener() {
@@ -224,6 +225,7 @@ public class WeatherActivity  extends AppCompatActivity{
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
 
     }
 }
